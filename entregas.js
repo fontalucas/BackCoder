@@ -29,13 +29,20 @@
 const fs = require('fs');
 
 class ProductManager {
-    constructor() {
+    constructor(path) {
         this.products = []
-        this.path = this.path
-        path = './products.json'
+        this.path = path
+        
     }
     addProduct = (newProduct) => {
-        const productDb = this.products.find(product => product.code === newProduct.code)
+        let productDb = this.products.find(product => product.code === newProduct.code)
+        if (fs.existsSync(this.path)) {
+            let productDb = fs.readFile(this.path, 'utf-8', (err) =>{
+                this.products = JSON.parse(productDb);
+                console.log(err)
+            })
+            //return this.products
+        }
         if (productDb) {
             return 'Se encuentra el producto'
         } 
@@ -48,7 +55,7 @@ class ProductManager {
         } else {
             this.products = [... this.products, {... newProduct, id: this.products[this.products.length - 1].id + 1}]
         }
-        fs.writeFileSync(this.path, JSON.stringify(this.products, null, '\n'), (err) => {
+        fs.writeFileSync(this.path, JSON.stringify(newProduct, null, '\n'), (err) => {
             if (!err) {
             console.log('Producto agregado');
             }
@@ -58,21 +65,26 @@ class ProductManager {
         })
     }
     getProducts = () => {
-        fs.writeFile(this.path, [], 'utf-8', (err) => {
-            if (fs.existsSync(this.path)) {
-                const productDb = fs.readFile(this.path, 'utf-8')
+        if (fs.existsSync(this.path)) {
+            let productDb = fs.readFile(this.path, 'utf-8', (err) => {
                 this.products = JSON.parse(productDb);
-                return this.products
-            }
-            else {
                 console.log(err)
-            }
-        })
+            })
+            return this.products
+        }
+        else {
+            fs.writeFile(this.path, [], 'utf-8', (err) => {
+                console.log(err)
+            })
+        }
     }
         
     
     getProductById = (id) => {
-        const productDb = fs.readFile(this.path, 'utf-8')
+        let productDb = fs.readFile(this.path, 'utf-8', (err) => {
+            this.products = JSON.parse(productDb)
+            console.log(err)
+        })
         this.products.find(product => product.id === id)
         if (!productDb) {
             console.log('Not Found')
@@ -81,39 +93,37 @@ class ProductManager {
     }
 
     updateProduct = (id, campoActualizar) => {
-        const productDb = fs.readFileSync(this.path, 'utf-8')
-        this.products = JSON.parse(productDb)
+        let productDb = fs.readFileSync(this.path, 'utf-8')
+        let products = JSON.parse(productDb)
 
-        const index = this.products.findIndex(product => product.id === id)
+        const index = products.findIndex(product => product.id === id)
         if (index === -1) {
             return console.log(`No existe producto con el id: ${id}`)
         }
 
-        this.products[index] = { ...campoActualizar, id: this.products[index].id }
+        products[index] = { ...campoActualizar, id: products[index].id }
 
-        fs.writeFileSync(this.path, JSON.stringify(this.products, null,'\n'))
+        fs.writeFileSync(this.path, JSON.stringify(products, null,'\n'))
         console.log('Producto actualizado en la base de datos');
     }
 
     deleteProduct = (id) => {
-        const productDb = fs.readFileSync(this.path, 'utf-8')
-        this.products = JSON.parse(productDb)
-        const index = this.products.findIndex(product => product.id === id)
+        let productDb = fs.readFileSync(this.path, 'utf-8')
+        let products = JSON.parse(productDb)
+        const index = products.findIndex(product => product.id === id)
         if (index === -1) {
             return console.log(`No existe producto con el id: ${id}`)
         }
-        this.products.splice(index, 1)
-        fs.writeFile(this.path, JSON.stringify(this.products, null,'\n'))
+        products.splice(index, 1)
+        fs.writeFile(this.path, JSON.stringify(products, null,'\n'))
         console.log('Producto eliminado de la base de datos');
     }
 
-    
-        
 }
 
-const productos = new ProductManager() 
+const productos = new ProductManager('./products.json') 
 
-/* console.log(productos.addProduct({
+console.log(productos.addProduct({
     title: "Nombre del", 
     description: "telefono", 
     price: 20, 
@@ -122,13 +132,13 @@ const productos = new ProductManager()
     stock: 13  }))
 
     console.log(productos.addProduct({
-        title: "", 
+        title: "Celu", 
         description: "computadora", 
         price: 20, 
         thumbnail: "jkk", 
         code: 2,
         stock: 13  }))
- */
+
     console.log(productos.getProducts())
     console.log(productos.getProductById(2))
     productos.addProduct({
@@ -136,6 +146,6 @@ const productos = new ProductManager()
             description: 'esto es un producto',
             price: 2500,
             thumbnail: 'ruta imagen',
-            code: 2,
+            code: 3,
             stock: 100
         })
