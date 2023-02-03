@@ -1,0 +1,17 @@
+<div>
+    <h1>!Hola, {{name}}, Que bueno verte!</h1>
+    <h2>Stocket Io</h2>
+    <hr>
+    {{#if isAdmin}}
+        {{#each fakeApi}}
+            <div>
+                <p>Nombre del producto: {{this.name}}</p>
+                <p>Precio: {{this.price}}</p>
+            </div>
+        {{/each}}
+    {{else}}
+    <h2>Usted no tiene permisos necesarios para ver los productos</h2>
+    {{/if}}
+</div>
+<script> src='/virtual/public/js/index.js' </script>
+<script> src="/socket.io/socket.io.js"</script>
