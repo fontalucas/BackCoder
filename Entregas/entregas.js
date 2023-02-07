@@ -25,7 +25,7 @@
 // ticketManager.agregarEvento({'fede' 'lugar' 12931})
 // ticketManager.agregarEvento({nombre: 'evento 2', precio: 123123})
 // ticketManager.agregarEvento({nombre: 'evento 3'})
-
+const path = './apprealb/src/D'
 const fs = require('fs');
 
 module.export = class ProductManager {

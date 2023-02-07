@@ -57,7 +57,7 @@ router.delete('/', (req, res) => {
     const {userId} = req.params
 
     let arrayTamano = arraydeUsuarios.length
-    let users = arraydeUsuarios.filter(user => user.id !== userId)
+    let users = arraydeUsuarios.slice(user => user.id !== userId)
     
     res.status(200).send({mensaje: 'usuario borrado'}, users)
 })

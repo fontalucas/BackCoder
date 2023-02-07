@@ -12,11 +12,18 @@ module.export = class CartManager {
         let cart = this.getCartProducts()
         
         if (fs.existsSync(this.path, 'utf-8')) {
-            cart.id = 1
+            let data = fs.readFileSync(this.path, 'utf-8',)
+            let productDb = JSON.parse(data)
+            cart.id = productDb[cart.length - 1].id + 1
             cart.product = []
             productDb.push(cart)
+
         } else {
-            fs.writeFileSync(this.path, JSON.stringify(productDb, null, '\n'), (err) => {
+            let cartDb = [cart]
+
+            cart.id = 1
+            cart.product = []
+            fs.writeFileSync(this.path, JSON.stringify(cartDb, null, '\n'), (err) => {
                 if (!err) {
                     console.log('Carrito creado');
                 }
@@ -35,9 +42,9 @@ module.export = class CartManager {
             return cart.product
             }
         else {
-            fs.writeFileSync(this.path, '{}', 'utf-8', (err) => {
+            fs.writeFileSync(this.path, '[]', 'utf-8', (err) => {
                 if (!err){ 
-                    return {} 
+                    return [] 
                 }
                 else {
                     console.log(err)
@@ -51,17 +58,17 @@ module.export = class CartManager {
     uploadProduct = (cid, pid) => {
         let data = fs.readFileSync(this.path, 'utf-8')
         let productDb = JSON.parse(data)
-        let cart = productDb[cid - 1]
-        const index = productDb.findIndex(product => product.id === pid)
+        let cart = productDb[cid]
+        const index = cart.findIndex(product => product.id === pid)
         if (index === -1) {
             return console.log(`No existe producto con el id: ${id}`)
         }else {
-            let product = {}
+            let product = cart.product[index]
             product.id = pid
             cart.products = [...cart.products, product]
         //productDb[index] = { ...campoActualizar, id: products[index].id }
 
-        fs.writeFileSync(this.path, JSON.stringify(productDb, null,'\n'))
+        fs.writeFileSync(this.path, JSON.stringify(cart.products, null,'\n'))
         console.log('Producto actualizado en la base de datos');
         }
     }
