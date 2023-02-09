@@ -12,8 +12,10 @@
     {{#if isAdmin}}
         {{#each fakeApi}}
             <div>
-                <p>Nombre del producto: {{this.name}}</p>
-                <p>Precio: {{this.price}}</p>
+                <li>
+                    <p>Nombre del producto: {{this.title}}</p>
+                    <p>Precio: {{this.price}}</p>
+                </li>
             </div>
         {{/each}}
     {{else}}

@@ -6,9 +6,9 @@ const router = Router()
 
 
 const fakeApi = [
-    {name: 'producto 1', price: 120},
-    {name: 'producto 1', price: 120},
-    {name: 'producto 1', price: 120}
+    {title: 'producto 1', price: 120},
+    {title: 'producto 2', price: 120},
+    {title: 'producto 3', price: 120}
 ]
 
 router.get('/', (req, res) => {
@@ -28,4 +28,11 @@ router.get('/', (req, res) => {
 router.get('/register', (req, res) => {
     res.render('register')
 })
+
+
+router.get('/realtimeproducts', (req, res) => {
+    res.render(fakeApi)
+})
+
+
 module.exports = router
