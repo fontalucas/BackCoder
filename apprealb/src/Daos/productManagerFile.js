@@ -2,13 +2,13 @@ const fs = require('fs');
 
 const path = './src/mockDB/products.json';
 
-module.export = class ProductManager {
+module.exports = class ProductManager {
     constructor() {
         this.path = path
     }
     addProduct = (newProduct) => {
         
-        let productDb = this.getProducts()
+        let productDb = this.getProduct()
         let data = productDb.find(product => product.code === newProduct.code)
         
         if (newProduct.title === '' || newProduct.description === '' || newProduct.price === '') {
@@ -32,7 +32,7 @@ module.export = class ProductManager {
             }
         })
     }
-    getProducts = () => {
+    getProduct = () => {
         if (fs.existsSync(this.path)) {
             let data = fs.readFileSync(this.path, 'utf-8',)
             let productDb= JSON.parse(data);

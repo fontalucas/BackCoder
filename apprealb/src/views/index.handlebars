@@ -1,7 +1,14 @@
 <div>
-    <h1>!Hola, {{name}}, Que bueno verte!</h1>
+    <h1>!Hola, {{user.name}}, Que bueno verte!</h1>
     <h2>Stocket Io</h2>
     <hr>
+    <div>
+        <input type="text" name="chatBox" id="chatBox">
+    </div>
+    <div>
+        <p id="messageLog">
+        </p>
+    </div>
     {{#if isAdmin}}
         {{#each fakeApi}}
             <div>
@@ -13,5 +20,6 @@
     <h2>Usted no tiene permisos necesarios para ver los productos</h2>
     {{/if}}
 </div>
-<script> src='/virtual/public/js/index.js' </script>
+<script src=" https://cdn.jsdelivr.net/npm/sweetalert2@11.7.1/dist/sweetalert2.all.min.js "></script>
 <script> src="/socket.io/socket.io.js"</script>
+<script> src="/virtual/js/index.js" </script>

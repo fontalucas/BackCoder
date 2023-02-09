@@ -6,17 +6,19 @@ const productsRouter = require('./routes/productos.router')
 const cartRouter = require('./routes/cart.router')
 const { uploader } = require('./utils');
 const handlebars = require('express-handlebars');
-const {Server}  = require('socket.io')
+const { Server }  = require('socket.io')
 
-
+require('dotenv').config()
 //import express from 'express'
 
 const app = express()
-const PORT = 8080
+
+const PORT = 8080 || process.env.PORT 
 
 
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
+
 app.use('/virtual', express.static(__dirname+'/public'))
 app.use(cookieParser())
 
@@ -24,9 +26,9 @@ app.engine('handlebars', handlebars.engine())
 app.set('views', __dirname+'/views')
 app.set('views engine', 'handlebars') 
 
-app.get('/', (req, res) => {
+/* app.get('/', (req, res) => {
     res.render
-})
+}) */
 
 /* //middleware de aplicacion.
 app.use((req, res, next)=> {console.log('Time: ', Date())
@@ -56,7 +58,7 @@ app.post('/single', uploader.single('myfile'), (req, res)=> {
 })
 
 app.use((err, req, res, next)=> {
-        console.log()
+        console.log(err)
         res.status(500).send('error')
 })
 
@@ -64,12 +66,30 @@ const httpServer = app.listen(PORT, err => {
     if (err) console.log(err)
         console.log(`Escuchando en el puerto ${httpServer.address().port}}`)
 })
-const socketServer = new Server(httpServer)
 
-socketServer.on('connection', socket => {
+//instanciando socket
+const io = new Server(httpServer)
+
+const mensajes = [
+    {user: 'Lucas', }
+]
+let connectedClients = []
+
+io.on('connection', socket => {
     console.log('nuevo cliente conectado');
+    connectedClients.push(socket)
+    console.log(`Cliente conectado. Total de clientes conectados: ${connectedClients.length}`)
 
-    socket.on('mensaje', data => {console.log(data)})
+
+    socket.on('message', data => {console.log(data)
+    mensajes.push(data)
+    io.emit('messageLog', mensajes)
+})
+
+socket.on('authenticated', (data) =>{
+    socket.broadcast.emit('newUserConected', data)
+    console.log('authenticated');
+})
 
     socket.on('disconnect', () =>{
         console.log('Desconectado');

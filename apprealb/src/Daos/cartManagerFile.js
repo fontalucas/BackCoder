@@ -3,7 +3,7 @@ const fs = require('fs');
 
 const path = './src/mockDB/cart.json';
 
-module.export = class CartManager {
+module.exports = class CartManager {
     constructor() {
         this.path = path
     }
