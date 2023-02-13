@@ -27,10 +27,10 @@ app.set('views', __dirname+'/views')
 app.set('views engine', 'handlebars') 
 
 
-app.get('/', (req, res) => {
+/* app.get('/', (req, res) => {
     res.render
 }) 
-
+ */
 /* //middleware de aplicacion.
 app.use((req, res, next)=> {console.log('Time: ', Date())
     next()

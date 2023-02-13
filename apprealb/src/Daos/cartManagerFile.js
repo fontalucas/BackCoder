@@ -61,11 +61,17 @@ module.exports = class CartManager {
         let cart = productDb[cid]
         const index = cart.findIndex(product => product.id === pid)
         if (index === -1) {
+            let product = {}
+            product.id = pid
+            product.quantity = 1
+            cart.products = [...cart.products, product]
+
             return console.log(`No existe producto con el id: ${id}`)
+
         }else {
             let product = cart.product[index]
+            product.quantity++
             product.id = pid
-            cart.products = [...cart.products, product]
         //productDb[index] = { ...campoActualizar, id: products[index].id }
 
         fs.writeFileSync(this.path, JSON.stringify(cart.products, null,'\n'))
