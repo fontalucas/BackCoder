@@ -6,10 +6,13 @@ const productsRouter = require('./routes/productos.router')
 const cartRouter = require('./routes/cart.router')
 const { uploader } = require('./utils');
 const handlebars = require('express-handlebars');
-const { Server }  = require('socket.io')
+const { Server }  = require('socket.io');
+const ProductManager = require('./Daos/productManagerFile');
 
 require('dotenv').config()
 //import express from 'express'
+
+const productManager = new ProductManager
 
 const app = express()
 
@@ -71,30 +74,54 @@ const httpServer = app.listen(PORT, err => {
 //instanciando socket
 const io = new Server(httpServer)
 
-const mensajes = [
+/* const mensajes = [
     {user: 'Lucas', }
 ]
-let connectedClients = []
+let connectedClients = [] */
+let products 
 
-io.on('connection', socket => {
+//io.on('connection', socket => {
+//    console.log('nuevo cliente conectado');
+//    connectedClients.push(socket)
+//    console.log(`Cliente conectado. Total de clientes conectados: ${connectedClients.length}`)
+io.on('connection', async socket => {
     console.log('nuevo cliente conectado');
-    connectedClients.push(socket)
-    console.log(`Cliente conectado. Total de clientes conectados: ${connectedClients.length}`)
-
-
-    socket.on('message', data => {console.log(data)
-    mensajes.push(data)
-    io.emit('messageLog', mensajes)
+    try{
+        products = await productManager.getProducts()
+        socket.emit('products', products)
+    }
+    catch(err) {console.log(err)}
 })
 
-socket.on('authenticated', (data) =>{
-    socket.broadcast.emit('newUserConected', data)
-    console.log('authenticated');
+//    socket.on('message', data => {console.log(data)
+//    mensajes.push(data)
+//    io.emit('messageLog', mensajes)
+//})
+socket.on('product', async data => {console.log(data)
+    const objProd = {
+        title,
+        description,
+        price,
+        code,
+        stock,
+        category,
+
+    }
+    objProd = data
+    try{
+        product = await productManager.addProduct({...objProd})
+        io.emit('products', product)
+    }
+    catch (err) {console.log(err)}
 })
+//
+//socket.on('authenticated', (data) =>{
+//    socket.broadcast.emit('newUserConected', data)
+//    console.log('authenticated');
+//})
 
     socket.on('disconnect', () =>{
         console.log('Desconectado');
-    })
 })
 
 httpServer.on('eerror', err => {
