@@ -91,21 +91,20 @@ io.on('connection', async socket => {
         socket.emit('products', products)
     }
     catch(err) {console.log(err)}
-})
-
-//    socket.on('message', data => {console.log(data)
-//    mensajes.push(data)
-//    io.emit('messageLog', mensajes)
-//})
-socket.on('product', async data => {console.log(data)
-    const objProd = {
-        title,
-        description,
+    
+    //    socket.on('message', data => {console.log(data)
+    //    mensajes.push(data)
+    //    io.emit('messageLog', mensajes)
+    //})
+    socket.on('product', async data => {console.log(data)
+        const objProd = {
+            title,
+            description,
         price,
         code,
         stock,
         category,
-
+        
     }
     objProd = data
     try{
@@ -116,14 +115,16 @@ socket.on('product', async data => {console.log(data)
 })
 //
 //socket.on('authenticated', (data) =>{
-//    socket.broadcast.emit('newUserConected', data)
-//    console.log('authenticated');
-//})
-
+    //    socket.broadcast.emit('newUserConected', data)
+    //    console.log('authenticated');
+    //})
+    
     socket.on('disconnect', () =>{
         console.log('Desconectado');
-})
-
-httpServer.on('eerror', err => {
-    console.log(err)
+    })
+    
+    httpServer.on('eerror', err => {
+        console.log(err)
+    })
+    
 })
